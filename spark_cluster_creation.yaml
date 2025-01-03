@@ -1,0 +1,31 @@
+BEFORE:
+	VBOX UBUNTU SETTING -> NETWORK -> ADAPTER 2 -> HOST ONLY ADAPTER -> PROMISCUO MODE> ALL -> CLONE -> GENERATE NEW ADDRESS 
+
+	HOST MASTER:
+1) find the marter ip -> ip addr -> inet enp0s8 3 -> 192.168.56.101
+2) cd /opt/spark/conf/
+3) cp spark-env.sh.template spark-env.sh -> nano spark-env.sh
+4) SPARK_MASTER_HOST='192.168.56.101'
+5) cd sbin
+6) ./start-marter.sh
+7) copy the log create like -> nano /home/tonycastellamare/spark-3.5.3-bin-hadoop3/logs/spark-tonycastellamare-org.apache.spark.deploy.master.Master-1-tonycastellamare.out
+8) Bound MasterWebUI to 0.0.0.0, and started at http://10.0.2.15:8080 at the below file 
+9) cd sbin -> start-slave.sh spark://192.168.56.101:7077 (it is master address)
+
+
+	SLAYER GUEST:
+1) cd /opt/spark/conf/
+2) cp spark-env.sh.template spark-env.sh -> nano spark-env.sh
+3) SPARK_MASTER_HOST='192.168.56.101' (i need to put the same master address)
+4) cd sbin -> ./start-slave.sh spark://192.168.56.101:7077 (i have to put the master address here as well)
+5) /home/tonycastellamare/spark-3.5.3-bin-hadoop3/logs/spark-tonycastellamare-org.apache.spark.deploy.worker.Worker-1-tonycastellamare.out
+6) Bound WorkerWebUI to 0.0.0.0, and started at http://10.0.2.15:8081
+
+
+  I NEED A CLUSTER MANAGER:
+	THREE TYPE:
+		Standalone Cluster Manager: Simple and easy to set up, suitable for small clusters.
+		Apache Mesos: A general-purpose cluster manager that can manage resources for multiple frameworks.
+		Hadoop YARN: A resource manager for Hadoop clusters, suitable for large-scale deployments.
+    to begin a session with cluster:
+      in terminal of master server -> pyspark --master sparl://192.168.56.101:7077
